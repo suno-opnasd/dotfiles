@@ -1,0 +1,72 @@
+# 現在の背景色で消去する
+defbce 'on'
+# 256色表示設定
+term xterm-256color
+# スクロールバッファは最大10000行にする
+defscrollback 10000
+# 別画面サポート。Vimやless使うときに便利
+altscreen on
+# ビジュアルベル（画面全体が点滅する）を切る
+vbell off
+# ベルの時はメッセージ（＋音）を出す(^GはvimでC-v C-gで入力する)
+#bell_msg 'Bell in window %^G'
+# 端末が落ちたら自動的にデタッチする
+autodetach on
+# 新しいウィンドウを生成するときのコマンド
+shell -$SHELL
+# スタートアップメッセージを消す
+startup_message off
+# ログファイルのファイル名
+logfile '$HOME/.screen/screen-%Y%m%d-%n.log'
+# 標準でログをとる
+deflog on
+#メッセージを表示する時間(秒単位)
+msgwait 5
+#次のメッセージを表示するまでの遅延時間(秒単位)
+msgminwait 1
+
+# hardstatus and caption
+hardstatus on
+caption always '%{= wb} %-w%{=bu dr}%n %t%{-}%+w %= %{=b wk} [%l] %{=b wb}%y/%m/%d %{=b wm}%c'
+sorendition '+r .b'
+
+# 起動時のリサイズを抑制
+termcapinfo  xterm hs@:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+termcapinfo  xterm-256color hs@:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+
+# コマンドキーをCtrl+Jにする
+escape ^Jj
+
+#ウィンドウ操作モード(^t w でウィンドウを連続的に操作できるようになる)
+bind w eval 'echo "Operate window"' 'command -c operate'
+#bind -c operate ^]  command
+bind -c operate j eval 'next' 'command -c operate'
+#bind -c operate k eval 'kill' 'command -c operate'
+bind -c operate h eval 'prev' 'command -c operate'
+bind -c operate l eval 'prev' 'command -c operate'
+bind -c operate + eval 'resize -v +1' 'command -c operate'
+bind -c operate - eval 'resize -v -1' 'command -c operate'
+bind -c operate > eval 'resize -h +1' 'command -c operate'
+bind -c operate < eval 'resize -h -1' 'command -c operate'
+bind -c operate = eval 'resize -v =' 'command -c operate'
+bind -c operate + eval 'resize -h =' 'command -c operate'
+bind -c operate s eval 'split' 'command -c operate'
+bind -c operate c eval 'screen' 'command -c operate'
+bind -c operate n eval 'screen' 'command -c operate'
+bind -c operate x eval 'remove' 'command -c operate'
+
+#通常の操作キー eval 'hoge' になっているのに意味はない
+bind x remove
+bind h eval 'prev'
+#bind k eval 'kill'
+bind l eval 'next'
+bind n eval 'screen'
+bind + eval 'resize -v +1'
+bind - eval 'resize -v -1'
+bind > eval 'resize -h +1'
+bind < eval 'resize -h -1'
+bind s eval 'split' focus screen
+bind = eval 'resize -v ='
+bind + eval 'resize -h +'
+#^t h との誤爆を防ぐために^t ^hは無効にする
+#bind ^h
